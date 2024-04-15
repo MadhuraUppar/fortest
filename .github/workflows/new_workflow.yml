@@ -12,7 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Fetch latest changes
+        run: git fetch origin main
+
       - name: List modified files
         run: |
           git diff --name-only main
-
