@@ -1,0 +1,19 @@
+name: Check Changed Files
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: List Changed Files
+        run: |
+          git diff --name-only HEAD^ HEAD > changed_files.txt
+          cat changed_files.txt
