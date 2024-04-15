@@ -15,5 +15,5 @@ jobs:
       
       - name: List Changed Files
         run: |
-          git diff --name-only HEAD^ HEAD > changed_files.txt
-          cat changed_files.txt
+          echo changedfiles=$(git diff --name-only
+          
