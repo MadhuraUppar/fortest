@@ -15,5 +15,6 @@ jobs:
       
       - name: List Changed Files
         run: |
+          echo"last modified files"
+          git diff --name-only HEAD^ HEAD
           
-          echo changedfiles=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
