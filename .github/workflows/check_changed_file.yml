@@ -15,6 +15,6 @@ jobs:
       
       - name: List Changed Files
         run: |
-          echo"last modified files"
+          echo "last modified files"
           git diff --name-only HEAD^ HEAD
           
