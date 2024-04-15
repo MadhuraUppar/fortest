@@ -1,7 +1,7 @@
 name: Check Changed Files
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
