@@ -15,5 +15,5 @@ jobs:
       
       - name: List Changed Files
         run: |
-          # echo changedfiles=$(git diff --name-only)
+          
           echo changedfiles=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
