@@ -10,17 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      
-      - name: List Changed Files
-        run: |
-          echo "last modified files 1"
-          git diff --name-only
-          echo "last modified files 2"
-          git diff --name-only HEAD
-          echo "modify 3"
-          git diff -- test.py
+      - name: Clone Repo
+        uses: actions/checkout@v3
+
+      - name: Get main branch
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
+
+      - name: Get list of changed files in a specific directory
+        id: set-changed-files
+        run: echo "changedfiles=$(git diff --name-only --diff-filter=ACMRT origin/${{ github.event.pull_request.base.ref }} HEAD"
           
           
           
