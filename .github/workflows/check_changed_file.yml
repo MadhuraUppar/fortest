@@ -15,9 +15,11 @@ jobs:
       
       - name: List Changed Files
         run: |
-          echo "last modified files"
+          echo "last modified files 1"
+          git diff --name-only
+          echo "last modified files 2"
           git diff --name-only HEAD^2
-          echo "last modified 2"
+          echo "last modified files 3"
           git diff --name-only HEAD
           
           
