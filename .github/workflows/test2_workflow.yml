@@ -43,10 +43,10 @@ jobs:
     runs-on: windows-latest
     needs: changed_files_list
 
-    if: github.event.inputs.environment == 'Dev' || (github.event_name == 'pull_request' && needs.changed_files_list.outputs.changedfiles != '')
+    if: github.event.inputs.environment == 'Dev' 
     steps:
       - name: Print files to be validated in dev_stage
-        run: echo "${{ needs.changed_files_list.outputs.changedfiles}}"
+        run: echo "im in"
     
     
       
