@@ -1,0 +1,49 @@
+name: Stages Creation Workflow
+on:
+  workflow_dispatch:
+    inputs:
+        environment:
+          required: true
+          type: choice
+          description: "environment"
+          options:
+            - "Dev"
+            - "QA"
+            - "PROD"
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  changed_files_list:
+    runs-on: ubuntu-latest
+    outputs:
+      changedfiles: ${{ steps.set-changed-files.outputs.changedfiles }}
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Clone Repo
+        uses: actions/checkout@v3
+
+      - name: Get main branch
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
+
+      - name: Get list of changed files in a specific directory
+        id: set-changed-files
+        run: echo "changedfiles=$(git diff --name-only --diff-filter=ACMRT origin/${{ github.event.pull_request.base.ref }} HEAD | grep '^snowflake_stages_automation' | uniq)" >> $GITHUB_OUTPUT
+
+      - name: Print files to be validated
+        run: echo "${{steps.set-changed-files.outputs.changedfiles}}"
+
+  dev_stages_workflow:
+    runs-on: windows-latest
+    needs: changed_files_list
+    if: ${{ needs.changed_files_list.outputs.changedfiles != ''}}
+    steps:
+       - name: Print files to be validated
+         run: echo "yeahhhhhhhhhhh im in if condition"
+      
