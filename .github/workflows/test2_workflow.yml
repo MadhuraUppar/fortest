@@ -44,7 +44,8 @@ jobs:
     if: ${{ (github.event_name == 'pull_request') && (needs.changed_files_list.outputs.changedfiles != '') || (github.event.inputs.environment == 'Dev') }}
     steps:
       - name: Print files to be validated in dev_stage
-        run: echo "hurrayyyyy"
+        run: echo "hurrayyy"
+
     
     
       
