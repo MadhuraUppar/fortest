@@ -18,7 +18,8 @@ on:
 permissions:
   id-token: write
   contents: read
-
+env:
+  MY_GLOBAL_VARIABLE: 'old_value'
 jobs:
   changed_files_list:
     runs-on: ubuntu-latest
@@ -38,11 +39,16 @@ jobs:
 
       - name: Print files to be validated in first_workflow
         run: echo "${{steps.set-changed-files.outputs.changedfiles}}"
+      - name: Set global variable
+        if: ${{steps.set-changed-files.outputs.changedfiles != ''}}
+        run: |
+          echo "::set-env name=MY_GLOBAL_VARIABLE::new_value"
+      
 
   dev_stages_workflow:
     runs-on: windows-latest
     needs: changed_files_list
-    if: ${{ github.event.inputs.environment == 'Dev' || (github.event_name == 'pull_request' && (needs.changed_files_list.outputs.changedfiles != '' || needs.changed_files_list.conclusion == 'skipped')) }}
+    if: ${{ github.event.inputs.environment == 'Dev'}} || ${{ env.MY_GLOBAL_VARIABLE !='old_value' }}
     steps:
       - name: Print files to be validated in dev_stage
         run: echo "hurrayyy"
