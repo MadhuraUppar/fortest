@@ -36,7 +36,7 @@ jobs:
         id: set-changed-files
         run: echo "changedfiles=$(git diff --name-only --diff-filter=ACMRT origin/${{ github.event.pull_request.base.ref }} HEAD | grep '^snowflake_stages_automation' | uniq)" >> $GITHUB_OUTPUT
 
-      - name: Print files to be validated
+      - name: Print files to be validated in first_workflow
         run: echo "${{steps.set-changed-files.outputs.changedfiles}}"
 
   dev_stages_workflow:
@@ -44,6 +44,6 @@ jobs:
     needs: changed_files_list
     if: ${{ needs.changed_files_list.outputs.changedfiles != ''}}
     steps:
-       - name: Print files to be validated
-         run: echo "yeahhhhhhhhhhh im in if condition"
+       - name: Print files to be validated in dev_stage
+         run: echo "${{ needs.changed_files_list.outputs.changedfiles}}"
       
