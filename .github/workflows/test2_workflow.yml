@@ -42,7 +42,7 @@ jobs:
   dev_stages_workflow:
     runs-on: windows-latest
     needs: changed_files_list
-    if: github.event_name == 'pull_request' && ${{ needs.changed_files_list.outputs.changedfiles != '""' }}
+    if: ${{ (github.event_name == 'pull_request') && (needs.changed_files_list.outputs.changedfiles != '""') }}
     steps:
        - name: Print files to be validated in dev_stage
          run: echo "${{ needs.changed_files_list.outputs.changedfiles}}"
