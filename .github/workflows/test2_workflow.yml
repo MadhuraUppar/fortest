@@ -41,7 +41,8 @@ jobs:
 
   dev_stages_workflow:
     runs-on: windows-latest
-    if: ${{ (github.event_name == 'pull_request') && (needs.changed_files_list.outputs.changedfiles != '') || (github.event.inputs.environment == 'Dev') }}
+    needs: changed_files_list
+    if: ${{ github.event.inputs.environment == 'Dev' || (github.event_name == 'pull_request' && (needs.changed_files_list.outputs.changedfiles != '' || needs.changed_files_list.conclusion == 'skipped')) }}
     steps:
       - name: Print files to be validated in dev_stage
         run: echo "hurrayyy"
