@@ -43,7 +43,7 @@ jobs:
     runs-on: windows-latest
     needs: changed_files_list
 
-    if: github.event.inputs.environment == 'Dev' 
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'Dev'
     steps:
       - name: Print files to be validated in dev_stage
         run: echo "im in"
