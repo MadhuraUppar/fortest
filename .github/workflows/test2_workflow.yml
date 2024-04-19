@@ -40,8 +40,14 @@ jobs:
       - name: Print files to be validated in first_workflow
         run: echo "${{steps.set-changed-files.outputs.changedfiles}}"
       
-      - name: Set global variable
+      - name: print old global variable
         if: env.changedfiles == ''
+        run: echo "variable is $MY_GLOBAL_VARIABLE"
+
+      - name: Change env variable
+        run: echo "::set-env name=MY_GLOBAL_VARIABLE::new_value"
+
+      - name: print new global variable
         run: echo "variable is $MY_GLOBAL_VARIABLE"
       
       - name: checking variable changed files
