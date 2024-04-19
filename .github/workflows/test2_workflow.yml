@@ -19,7 +19,7 @@ permissions:
   id-token: write
   contents: read
 env:
-  MY_GLOBAL_VARIABLE: old_value
+  MY_GLOBAL_VARIABLE: 'oldvalue'
 jobs:
   changed_files_list:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
         run: echo "variable is $MY_GLOBAL_VARIABLE"
 
       - name: Change env variable
-        run: echo "::set-env name=MY_GLOBAL_VARIABLE::new_value"
+        run: echo "::set-env name=MY_GLOBAL_VARIABLE::newvalue"
 
       - name: print new global variable
         run: echo "variable is $MY_GLOBAL_VARIABLE"
