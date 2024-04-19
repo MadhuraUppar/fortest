@@ -59,7 +59,7 @@ jobs:
     needs: changed_files_list 
     steps:
       - name: Print files to be validated in dev_stage
-        if: ${{ env.MY_GLOBAL_VARIABLE != 'oldvalue' && needs.changed_files_list.result != 'skipped'}}
+        if: ${{ env.MY_GLOBAL_VARIABLE != 'oldvalue'}}
         run: echo "variable is ${{ env.MY_GLOBAL_VARIABLE }}"
 
     
