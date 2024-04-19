@@ -45,7 +45,7 @@ jobs:
         run: echo "variable is $MY_GLOBAL_VARIABLE"
 
       - name: Change env variable
-        run: echo "::set-env name=MY_GLOBAL_VARIABLE::newvalue"
+        run: echo "newvalue" >> $MY_GLOBAL_VARIABLE
 
       - name: print new global variable
         run: echo "variable is $MY_GLOBAL_VARIABLE"
@@ -57,7 +57,7 @@ jobs:
   dev_stages_workflow:
     runs-on: windows-latest
     needs: changed_files_list
-    if: ${{ github.event.inputs.environment == 'Dev'}} 
+    if: ${{ github.event.inputs.environment == 'Dev'}} || ${{ env.MY_GLOBAL_VARIABLE == 'newvalue'}}
     steps:
       - name: Print files to be validated in dev_stage
         run: echo "hurrayyy"
