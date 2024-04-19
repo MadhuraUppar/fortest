@@ -41,8 +41,10 @@ jobs:
         run: echo "${{steps.set-changed-files.outputs.changedfiles}}"
       
       - name: Set global variable
-        if: ${{steps.set-changed-files.outputs.changedfiles != ''}}
         run: echo "variable is $MY_GLOBAL_VARIABLE"
+      
+      - name: checking variable changed files
+        run: echo "changed files variable value is $changedfiles"
       
 
   dev_stages_workflow:
