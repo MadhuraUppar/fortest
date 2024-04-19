@@ -60,12 +60,16 @@ jobs:
   dev_stages_workflow:
     runs-on: windows-latest 
     needs: changed_files_list 
+    if: always() || github.event_name == 'pull_request'
     steps:
       - name: print global variables using dollar sign
         run: echo "variable is $MY_GLOBAL_VARIABLE"
       
       - name: print global variables using env
         run: echo "variable is ${{ env.MY_GLOBAL_VARIABLE }}"
+      - name: testing
+        run: echo $MY_GLOBAL_VARIABLE
+        
       
 
     
