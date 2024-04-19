@@ -45,7 +45,7 @@ jobs:
         run: echo "variable is $MY_GLOBAL_VARIABLE"
 
       - name: Change env variable
-        run: echo "newvalue" >> $MY_GLOBAL_VARIABLE
+        run: echo "$MY_GLOBAL_VARIABLE=newvalue"
 
       - name: print new global variable
         run: echo "variable is $MY_GLOBAL_VARIABLE"
@@ -60,7 +60,7 @@ jobs:
     if: ${{ github.event.inputs.environment == 'Dev'}} || $MY_GLOBAL_VARIABLE == 'newvalue'
     steps:
       - name: Print files to be validated in dev_stage
-        run: echo "hurrayyy"
+        run: echo "variable is $MY_GLOBAL_VARIABLE"
 
     
     
