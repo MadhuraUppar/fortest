@@ -41,7 +41,7 @@ jobs:
         run: echo "${{steps.set-changed-files.outputs.changedfiles}}"
       
       - name: Set global variable
-        if: $changedfiles == ''
+        if: env.changedfiles == ''
         run: echo "variable is $MY_GLOBAL_VARIABLE"
       
       - name: checking variable changed files
