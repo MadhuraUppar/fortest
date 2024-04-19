@@ -58,6 +58,7 @@ jobs:
     runs-on: windows-latest 
     steps:
       - name: Print files to be validated in dev_stage
+        if: ${{ env.MY_GLOBAL_VARIABLE == 'newvalue'}}
         run: echo "variable is ${{ env.MY_GLOBAL_VARIABLE }}"
 
     
