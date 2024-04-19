@@ -56,7 +56,6 @@ jobs:
 
   dev_stages_workflow:
     runs-on: windows-latest
-    needs: changed_files_list
     if: $MY_GLOBAL_VARIABLE == 'newvalue' 
     steps:
       - name: Print files to be validated in dev_stage
