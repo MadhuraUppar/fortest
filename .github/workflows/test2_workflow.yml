@@ -45,7 +45,7 @@ jobs:
         run: echo "variable is $MY_GLOBAL_VARIABLE"
 
       - name: Change env variable
-        run: echo "$MY_GLOBAL_VARIABLE=newvalue"
+        run: echo "MY_GLOBAL_VARIABLE=newvalue" >> $GITHUB_ENV
 
       - name: print new global variable
         run: echo "variable is $MY_GLOBAL_VARIABLE"
