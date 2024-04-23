@@ -54,8 +54,8 @@ jobs:
 
   dev_stages_workflow:
     runs-on: windows-latest
-
+    needs: changed_files_list
     if : ${{ github.event.inputs.environment == 'Dev'}}
     steps:
       - name: Print files to be validated in dev_stage
-        run: echo ${{changed_files_list.result }}
+        run: echo "hurray"
