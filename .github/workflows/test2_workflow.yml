@@ -1,15 +1,16 @@
 name: Stages Creation Workflow
+
 on:
   workflow_dispatch:
     inputs:
-        environment:
-          required: true
-          type: choice
-          description: "environment"
-          options:
-            - "Dev"
-            - "QA"
-            - "PROD"
+      environment:
+        required: true
+        type: choice
+        description: "environment"
+        options:
+          - "Dev"
+          - "QA"
+          - "PROD"
 
   pull_request:
     branches:
@@ -18,13 +19,15 @@ on:
 permissions:
   id-token: write
   contents: read
+
 env:
   MY_GLOBAL_VARIABLE: 'old_value'
+
 jobs:
   changed_files_list:
     runs-on: ubuntu-latest
     outputs:
-      changedfiles: ${{ steps.set-changed-files.outputs.changedfiles }}
+      job1_completed: ${{ steps.set-changed-files.outputs.job1_completed }}
     if: github.event_name == 'pull_request'
     steps:
       - name: Clone Repo
@@ -38,21 +41,21 @@ jobs:
         run: echo "changedfiles=$(git diff --name-only --diff-filter=ACMRT origin/${{ github.event.pull_request.base.ref }} HEAD | grep '^snowflake_stages_automation' | uniq)" >> $GITHUB_OUTPUT
 
       - name: Print files to be validated in first_workflow
-        run: echo "${{steps.set-changed-files.outputs.changedfiles}}"
-      - name: Set global variable
-        if: ${{steps.set-changed-files.outputs.changedfiles != ''}}
+        run: echo "${{ steps.set-changed-files.outputs.changedfiles }}"
+
+      - name: Set job1_completed output
+        id: set-job1-completed
         run: |
-          echo "::set-env name=MY_GLOBAL_VARIABLE::new_value"
-      
+          if [ -z "${{ steps.set-changed-files.outputs.changedfiles }}" ]; then
+            echo "::set-output name=job1_completed::false"
+          else
+            echo "::set-output name=job1_completed::true"
+          fi
 
   dev_stages_workflow:
     runs-on: windows-latest
     needs: changed_files_list
-    if: ${{ needs.changed_files_list.result == 'skipped' }}
+    if: ${{ needs.changed_files_list.outputs.job1_completed == 'false' }}
     steps:
       - name: Print files to be validated in dev_stage
         run: echo "hurrayyy"
-
-    
-    
-      
