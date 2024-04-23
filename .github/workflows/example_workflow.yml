@@ -1,0 +1,21 @@
+name: Example Workflow
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Say Hello
+        run: echo "Hello"
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    if: ${{ needs.job1.result == 'skipped' }}
+    steps:
+      - name: First Job Skipped
+        run: echo "First job is skipped"
