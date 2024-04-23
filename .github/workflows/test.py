@@ -4,6 +4,6 @@ if a==b:
   print("yeah")
 else:
   print("nahh")
-print("yeahhhhhhhhhh")
+
 
 
