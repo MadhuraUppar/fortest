@@ -55,7 +55,7 @@ jobs:
   dev_stages_workflow:
     runs-on: windows-latest
     needs: changed_files_list
-    if : ${{ needs.changed_files_list.result != 'success'}}
+    if : ${{ github.event.inputs.environment == 'Dev'}} || ${{ needs.changed_files_list.result != 'success'}}
     steps:
       - name: Print files to be validated in dev_stage
         run: echo ${{ needs.changed_files_list.result }}
