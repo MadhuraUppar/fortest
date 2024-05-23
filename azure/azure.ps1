@@ -4,7 +4,8 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 # Define variables
 $User = 'svc_snowflake@invitationhomes.com'
 $PWord = ConvertTo-SecureString -String 'szU12ts89W' -AsPlainText -Force
-$TenantId = 'a9206aee-bab2-4a84-9b62-1be92b7f18c0'
+$TenantId = '0101c982-42b5-4932-8d76-28b81fc704c8'  
+$azure_object_id = 'a9206aee-bab2-4a84-9b62-1be92b7f18c0'
 $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $PWord
 
 try {
@@ -28,7 +29,7 @@ try {
             Connect-MgGraph -AccessToken $SecureAccessToken -NoWelcome
             
             # Retrieve group members
-            Get-MgGroupMember -GroupId {azure_object_id} -all | ForEach-Object {
+            Get-MgGroupMember -GroupId $azure_object_id -all | ForEach-Object {
                 Get-MgUser -UserId $_.Id
             } | Select-Object DisplayName, UserPrincipalName, GivenName, Surname, Department, JobTitle   
         } else {
