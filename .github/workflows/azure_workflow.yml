@@ -38,11 +38,9 @@ jobs:
           py -3.9 -m pip install sqlalchemy==1.4.52
           py -3.9 -m pip install numpy==1.26.4
       
-      - name: Run azure users fetch Python script
-        run: |
-          cd azure
-          python --version
-          pwd
-          $env:PATH = "C:\hostedtoolcache\windows\Python\3.9\x64\Scripts;$env:PATH"
-          python azure_python_script.py "dev" 'svc_snowflake@invitationhomes.com' 'szU12ts89W' 'a9206aee-bab2-4a84-9b62-1be92b7f18c0'
+    
           
+      - name: Run PowerShell Script
+        shell: pwsh
+        run: |
+          .\path\to\your\script.ps1
