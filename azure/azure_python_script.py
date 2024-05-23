@@ -10,16 +10,12 @@ def azure_users(azure_username, azure_password, azure_object_id):
         script_block = f""" 
             $User = '{azure_username}'
             $PWord = ConvertTo-SecureString -String '{azure_password}' -AsPlainText -Force
-            return $PWord
             $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $PWord
             $nomsg=Connect-AzAccount -Credential $Credentials -TenantId '0101c982-42b5-4932-8d76-28b81fc704c8'
             $contextForMSGraphToken = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile.DefaultContext
             $newBearerAccessTokenRequest = [Microsoft.Azure.Commands.Common.Authentication.AzureSession]::Instance.AuthenticationFactory.Authenticate($contextForMSGraphToken.Account, $contextForMSGraphToken.Environment, $contextForMSGraphToken.Tenant.id.ToString(), $null, [Microsoft.Azure.Commands.Common.Authentication.ShowDialog]::Never, $null, 'https://graph.microsoft.com')
-            return $newBearerAccessTokenRequest
             $AccessToken = $newBearerAccessTokenRequest.AccessToken
-            return $AccessToken
             $SecureAccessToken = ConvertTo-SecureString -String $AccessToken -AsPlainText -Force
-            return $SecureAccessToken
             Connect-MgGraph -AccessToken $SecureAccessToken -NoWelcome
             Get-MgGroupMember -GroupId {azure_object_id} -all | ForEach-Object {{ Get-MgUser -UserId $_.Id }} | Select-Object DisplayName, UserPrincipalName, GivenName, Surname, Department, JobTitle   
             """
@@ -49,6 +45,7 @@ def azure_users(azure_username, azure_password, azure_object_id):
             output = result.stdout
             print("result.stdout is ")
             print(output)
+            print(result)
             # output format containing escape characters like '\x1b[32;1m' to remove this used re.compile
             '''ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
             output = ansi_escape.sub('', output)
