@@ -10,16 +10,27 @@ def azure_users(azure_username, azure_password, azure_object_id):
         script_block = f""" 
             $User = '{azure_username}'
             $PWord = ConvertTo-SecureString -String '{azure_password}' -AsPlainText -Force
+            return $PWord
             $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $PWord
-            $nomsg=Connect-AzAccount -Credential $Credentials 
+            $nomsg=Connect-AzAccount -Credential $Credentials -TenantId '0101c982-42b5-4932-8d76-28b81fc704c8'
             $contextForMSGraphToken = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile.DefaultContext
             $newBearerAccessTokenRequest = [Microsoft.Azure.Commands.Common.Authentication.AzureSession]::Instance.AuthenticationFactory.Authenticate($contextForMSGraphToken.Account, $contextForMSGraphToken.Environment, $contextForMSGraphToken.Tenant.id.ToString(), $null, [Microsoft.Azure.Commands.Common.Authentication.ShowDialog]::Never, $null, 'https://graph.microsoft.com')
+            return $newBearerAccessTokenRequest
             $AccessToken = $newBearerAccessTokenRequest.AccessToken
+            return $AccessToken
             $SecureAccessToken = ConvertTo-SecureString -String $AccessToken -AsPlainText -Force
+            return $SecureAccessToken
             Connect-MgGraph -AccessToken $SecureAccessToken -NoWelcome
             Get-MgGroupMember -GroupId {azure_object_id} -all | ForEach-Object {{ Get-MgUser -UserId $_.Id }} | Select-Object DisplayName, UserPrincipalName, GivenName, Surname, Department, JobTitle   
             """
-        
+        script_block_1 = f"""
+            $password = ConvertTo-SecureString '{azure_password}' -AsPlainText -Force
+            $cred = New-Object System.Management.Automation.PSCredential('{azure_username}', $password)
+            Connect-AzureAD -Credential $cred
+            Get-AzureADGroupMember -ObjectId {azure_object_id} -All $true |
+                ForEach-Object {{ Get-AzureADUser -ObjectId $_.ObjectId }} |
+                Select-Object DisplayName, UserPrincipalName, GivenName, Surname, Department, JobTitle
+        """ 
         # Run PowerShell script using subprocess
         result = subprocess.run(
             [r"C:\Program Files\PowerShell\7\pwsh.EXE", "-Command", f"& {{{script_block}}}"],
@@ -31,13 +42,15 @@ def azure_users(azure_username, azure_password, azure_object_id):
             print("Error:", result.stderr)
             return 
         if result.stderr:
-            print("Error connecting to Azure AD. Error output:", result.stderr)
+            print("Error connecting to Azure AD. Error output , result.stderr is :", result.stderr)
             return 
         else:
             # Process the output and create a DataFrame
             output = result.stdout
+            print("result.stdout is ")
+            print(output)
             # output format containing escape characters like '\x1b[32;1m' to remove this used re.compile
-            ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+            '''ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
             output = ansi_escape.sub('', output)
             lines = [
                 line.strip() for line in output.strip().split("\n") if line.strip()
@@ -56,9 +69,9 @@ def azure_users(azure_username, azure_password, azure_object_id):
                 data.setdefault("LastName", []).append(lastname)
                 data.setdefault("Department", []).append(department)
                 data.setdefault("JobTitle", []).append(job_title)
-            df = pd.DataFrame(data)
+            df = pd.DataFrame(data)'''
         
-        return df
+        return 
 
     except subprocess.CalledProcessError as e:
         print("Error connecting to Azure AD:", e)
@@ -72,5 +85,5 @@ def azure_users(azure_username, azure_password, azure_object_id):
 if __name__ == "__main__":
     # Fetch Azure users and insert into Snowflake
     print(sys.argv[2], sys.argv[3], sys.argv[4])
-    df = azure_users(sys.argv[2], sys.argv[3], sys.argv[4])
-    print(df)
+    azure_users(sys.argv[2], sys.argv[3], sys.argv[4])
+    

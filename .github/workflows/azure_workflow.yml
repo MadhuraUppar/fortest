@@ -19,6 +19,7 @@ jobs:
           if (-not (Get-Module -Name Microsoft.Graph -ListAvailable)) {
             Install-Module -Name Microsoft.Graph -Force -Scope CurrentUser
           }
+          install-module -Name AzureAD -Force -AllowClobber
           Uninstall-AzureRm
 
       - name: Set up Python
