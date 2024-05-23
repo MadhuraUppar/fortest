@@ -19,10 +19,17 @@ def azure_users(azure_username, azure_password, azure_object_id):
             Connect-MgGraph -AccessToken $SecureAccessToken -NoWelcome
             Get-MgGroupMember -GroupId {azure_object_id} -all | ForEach-Object {{ Get-MgUser -UserId $_.Id }} | Select-Object DisplayName, UserPrincipalName, GivenName, Surname, Department, JobTitle   
             """
-        
+        script_block_1 = f"""
+            $password = ConvertTo-SecureString '{azure_password}' -AsPlainText -Force
+            $cred = New-Object System.Management.Automation.PSCredential('{azure_username}', $password)
+            Connect-AzureAD -Credential $cred
+            Get-AzureADGroupMember -ObjectId {azure_object_id} -All $true |
+                ForEach-Object {{ Get-AzureADUser -ObjectId $_.ObjectId }} |
+                Select-Object DisplayName, UserPrincipalName, GivenName, Surname, Department, JobTitle
+        """ 
         # Run PowerShell script using subprocess
         result = subprocess.run(
-            [r"C:\Program Files\PowerShell\7\pwsh.EXE", "-Command", f"& {{{script_block}}}"],
+            [r"C:\Program Files\PowerShell\7\pwsh.EXE", "-Command", f"& {{{script_block_1}}}"],
             capture_output=True, text=True)
         
         # Check if the PowerShell script execution was successful
