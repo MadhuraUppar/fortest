@@ -43,4 +43,5 @@ jobs:
       - name: Run PowerShell Script
         shell: pwsh
         run: |
-          .azure/azure.ps1
+          cd azure  
+          .\azure.ps1
