@@ -1,0 +1,47 @@
+name: Azure DEV workflow
+on:
+  schedule:
+    - cron: "30 14 * * *" # Every day at 2:30 PM UTC or 9:30 AM CDT
+  workflow_dispatch:
+jobs:
+  azure_workflow:
+    runs-on: windows-latest
+    steps:
+      - name: Clone Repo
+        uses: actions/checkout@v3
+
+      - name: Install Azure modules
+        run: |
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+          if (-not (Get-Module -Name Az -ListAvailable)) {
+            Install-Module -Name Az -Force -Scope CurrentUser -AllowClobber
+          }
+          if (-not (Get-Module -Name Microsoft.Graph -ListAvailable)) {
+            Install-Module -Name Microsoft.Graph -Force -Scope CurrentUser
+          }
+          Uninstall-AzureRm
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install pywin32 package
+        run: |
+          python --version
+          py -3.9 -m pip install requests==2.31.0
+          py -3.9 -m pip install pywin32==306   
+          py -3.9 -m pip install snowflake-connector-python==3.8.1
+          py -3.9 -m pip install snowflake-sqlalchemy==1.5.1
+          py -3.9 -m pip install pandas==2.1.2
+          py -3.9 -m pip install sqlalchemy==1.4.52
+          py -3.9 -m pip install numpy==1.26.4
+      
+      - name: Run azure users fetch Python script
+        run: |
+          cd azure
+          python --version
+          pwd
+          $env:PATH = "C:\hostedtoolcache\windows\Python\3.9\x64\Scripts;$env:PATH"
+          python azure_script.py "dev" 'svc_snowflake@invitationhomes.com' 'szU12ts89W' 'a9206aee-bab2-4a84-9b62-1be92b7f18c0'
+      
